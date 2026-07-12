@@ -226,10 +226,87 @@ router.delete("/experience/:exp_id", authMiddleware, async (req, res) => {
 
     profile.experience.splice(removeIndex, 1);
 
+    //Easy way to remove experience from profile
+    // profile.experience = profile.experience.filter(
+    //   (exp) => exp.id !== req.params.exp_id,
+    // );
+
     await profile.save();
     return res
       .status(200)
       .json({ msg: "Experience removed successfully", profile });
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).json({ msg: "Server Error" });
+  }
+});
+
+// @route   PUT api/profile/education
+// @desc    Add education to profile
+// @access  Private
+router.put(
+  "/education",
+  [
+    authMiddleware,
+    [
+      check("school", "School is required").not().isEmpty(),
+      check("degree", "Degree is required").not().isEmpty(),
+      check("fieldofstudy", "Field of study is required").not().isEmpty(),
+      check("from", "From date is required").not().isEmpty(),
+    ],
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { school, degree, fieldofstudy, from, to, current, description } =
+      req.body;
+
+    const newEdu = {
+      school,
+      degree,
+      fieldofstudy,
+      from,
+      to,
+      current,
+      description,
+    };
+
+    try {
+      const profile = await profileModel.findOne({ user: req.user.id });
+
+      profile.education.unshift(newEdu);
+
+      await profile.save();
+
+      return res
+        .status(200)
+        .json({ msg: "Education added successfully", profile });
+    } catch (err) {
+      console.error(err.message);
+      return res.status(500).json({ msg: "Server Error" });
+    }
+  },
+);
+
+// @route   DELETE api/profile/education
+// @desc    Delete education from profile
+// @access  Private
+router.delete("/education/:edu_id", authMiddleware, async (req, res) => {
+  try {
+    const profile = await profileModel.findOne({ user: req.user.id });
+
+    //Easy way to remove education from profile
+    profile.education = profile.education.filter(
+      (edu) => edu.id !== req.params.edu_id,
+    );
+
+    await profile.save();
+    return res
+      .status(200)
+      .json({ msg: "Education removed successfully", profile });
   } catch (err) {
     console.error(err.message);
     return res.status(500).json({ msg: "Server Error" });
