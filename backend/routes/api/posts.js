@@ -38,4 +38,66 @@ router.post(
   },
 );
 
+// @route   GET api/posts
+// @desc    Get all posts
+// @access  Private
+router.get("/", authMiddleware, async (req, res) => {
+  try {
+    const posts = await postModel.find().sort({ date: -1 });
+    res.status(200).json({ msg: "Posts retrieved successfully", posts });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: "Server Error" });
+  }
+});
+
+// @route   GET api/posts/:id
+// @desc    Get post by ID
+// @access  Private
+router.get("/:id", authMiddleware, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const post = await postModel.findById(id);
+
+    if (!post) {
+      return res.status(404).json({ msg: "Post not found" });
+    }
+    res.status(200).json({ msg: "Post retrieved successfully", post });
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === "ObjectId") {
+      return res.status(404).json({ msg: "Post not found" });
+    }
+    res.status(500).json({ msg: "Server Error" });
+  }
+});
+
+// @route   DELETE api/posts/:id
+// @desc    Delete a post
+// @access  Private
+router.delete("/:id", authMiddleware, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const post = await postModel.findById(id);
+
+    if (!post) {
+      return res.status(404).json({ msg: "Post not found" });
+    }
+
+    // Check if the user is the owner of the post
+    if (post.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: "User not authorized" });
+    }
+
+    await post.deleteOne();
+
+    res.status(200).json({ msg: "Post deleted successfully" });
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === "ObjectId") {
+      return res.status(404).json({ msg: "Post not found" });
+    }
+    res.status(500).json({ msg: "Server Error" });
+  }
+});
 module.exports = router;
