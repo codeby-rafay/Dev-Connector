@@ -209,6 +209,7 @@ router.post(
 // @access  Private
 router.delete("/comment/:id/:comment_id", authMiddleware, async (req, res) => {
   const { id, comment_id } = req.params;
+
   try {
     const post = await postModel.findById(id);
 
