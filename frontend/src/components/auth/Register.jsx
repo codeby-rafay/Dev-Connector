@@ -48,7 +48,7 @@ const Register = () => {
             value={name}
             onChange={onChange}
             required
-            autoComplete="true"
+            autoComplete="name"
           />
         </div>
 
@@ -60,13 +60,8 @@ const Register = () => {
             value={email}
             onChange={onChange}
             required
-            autoComplete="true"
+            autoComplete="email"
           />
-
-          <small className="form-text">
-            This site uses Gravatar, so if you want a profile image, use a
-            Gravatar email.
-          </small>
         </div>
 
         <div className="form-group">
