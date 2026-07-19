@@ -4,6 +4,7 @@ import Navbar from "./components/layout/Navbar";
 import Landing from "./components/layout/Landing";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
+import Dashboard from "./components/layout/Dashboard";
 import Alert from "./components/layout/Alert";
 import setAuthToken from "./utils/setAuthtoken";
 
@@ -25,17 +26,14 @@ const App = () => {
       <Router>
         <Navbar />
 
-        {/* Landing page - full width */}
-        <Routes>
-          <Route path="/" element={<Landing />} />
-        </Routes>
-
-        {/* Other pages - inside container */}
         <section className="container">
           <Alert />
+
           <Routes>
+            <Route path="/" element={<Landing />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
         </section>
       </Router>
