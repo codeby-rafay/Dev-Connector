@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, Navigate  } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { setAlert } from "../../actions/alert.action";
 import { register } from "../../actions/auth.action";
@@ -37,7 +37,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
   };
 
   if (isAuthenticated) {
-   <Navigate to="/dashboard" />;
+    return <Navigate to="/dashboard" />;
   }
 
   return (
