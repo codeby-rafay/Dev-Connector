@@ -1,9 +1,10 @@
 import { Navigate } from "react-router-dom";
 import { connect } from "react-redux";
+import Spinner from "../layout/Spinner.jsx";
 
 const PrivateRoute = ({ isAuthenticated, loading, children }) => {
   if (loading) {
-    return <div>Loading...</div>;
+    return <Spinner />;
   }
 
   return isAuthenticated ? children : <Navigate to="/login" replace />;
