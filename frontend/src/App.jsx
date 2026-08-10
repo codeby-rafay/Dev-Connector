@@ -10,6 +10,7 @@ import Alert from "./components/layout/Alert";
 import setAuthToken from "./utils/setAuthtoken";
 import PrivateRoute from "./components/routing/PrivateRoute";
 import EditProfile from "./components/profile-forms/EditProfile";
+import AddExperience from "./components/profile-forms/AddExperience";
 
 import store from "./store";
 import { Provider } from "react-redux";
@@ -57,6 +58,14 @@ const App = () => {
               element={
                 <PrivateRoute>
                   <EditProfile />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/add-experience"
+              element={
+                <PrivateRoute>
+                  <AddExperience />
                 </PrivateRoute>
               }
             />
