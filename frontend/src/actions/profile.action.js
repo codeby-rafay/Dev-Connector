@@ -9,12 +9,17 @@ export const getCurrentProfile = () => async (dispatch) => {
 
     dispatch({
       type: GET_PROFILE,
-      payload: res.data,
+      payload: res.data.profile,
     });
   } catch (err) {
+    const response = err.response;
+
     dispatch({
       type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: {
+        msg: response?.statusText || err.message,
+        status: response?.status || 500,
+      },
     });
   }
 };
@@ -37,7 +42,7 @@ export const createProfile =
 
       dispatch({
         type: GET_PROFILE,
-        payload: res.data,
+        payload: res.data.profile,
       });
 
       dispatch(
@@ -48,7 +53,8 @@ export const createProfile =
         navigate("/dashboard");
       }
     } catch (err) {
-      const errors = err.response.data.errors;
+      const response = err.response;
+      const errors = response?.data?.errors;
 
       if (errors) {
         errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
@@ -56,7 +62,10 @@ export const createProfile =
 
       dispatch({
         type: PROFILE_ERROR,
-        payload: { msg: err.response.statusText, status: err.response.status },
+        payload: {
+          msg: response?.statusText || err.message,
+          status: response?.status || 500,
+        },
       });
     }
   };
@@ -77,14 +86,15 @@ export const addExperience = (formData, navigate) => async (dispatch) => {
 
     dispatch({
       type: UPDATE_PROFILE,
-      payload: res.data,
+      payload: res.data.profile,
     });
 
     dispatch(setAlert("Experience Added", "success"));
 
     navigate("/dashboard");
   } catch (err) {
-    const errors = err.response.data.errors;
+    const response = err.response;
+    const errors = response?.data?.errors;
 
     if (errors) {
       errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
@@ -92,7 +102,10 @@ export const addExperience = (formData, navigate) => async (dispatch) => {
 
     dispatch({
       type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: {
+        msg: response?.statusText || err.message,
+        status: response?.status || 500,
+      },
     });
   }
 };
@@ -113,14 +126,15 @@ export const addEducation = (formData, navigate) => async (dispatch) => {
 
     dispatch({
       type: UPDATE_PROFILE,
-      payload: res.data,
+      payload: res.data.profile,
     });
 
     dispatch(setAlert("Education Added", "success"));
 
     navigate("/dashboard");
   } catch (err) {
-    const errors = err.response.data.errors;
+    const response = err.response;
+    const errors = response?.data?.errors;
 
     if (errors) {
       errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
@@ -128,7 +142,10 @@ export const addEducation = (formData, navigate) => async (dispatch) => {
 
     dispatch({
       type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: {
+        msg: response?.statusText || err.message,
+        status: response?.status || 500,
+      },
     });
   }
 };
