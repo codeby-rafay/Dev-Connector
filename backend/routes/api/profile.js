@@ -5,6 +5,7 @@ const { authMiddleware } = require("../../middleware/auth.middleware");
 const { check, validationResult } = require("express-validator");
 const profileModel = require("../../models/profile.model");
 const userModel = require("../../models/user.model");
+const postModel = require("../../models/post.model");
 
 // @route   GET api/profile/me
 // @desc    Get current users profile
@@ -152,6 +153,8 @@ router.get("/user/:user_id", async (req, res) => {
 // @access  Private
 router.delete("/", authMiddleware, async (req, res) => {
   try {
+    //Remove user posts
+    await postModel.deleteMany({ user: req.user.id });
     //Remove profile
     await profileModel.findOneAndDelete({ user: req.user.id });
     //Remove user
