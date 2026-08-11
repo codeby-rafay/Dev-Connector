@@ -4,7 +4,11 @@ import Spinner from "../layout/Spinner.jsx";
 
 const PrivateRoute = ({ isAuthenticated, loading, children }) => {
   if (loading) {
-    return <Spinner />;
+    return (
+      <div className="spinner-container">
+        <Spinner />
+      </div>
+    );
   }
 
   return isAuthenticated ? children : <Navigate to="/login" replace />;

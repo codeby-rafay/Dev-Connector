@@ -19,7 +19,9 @@ const Dashboard = ({
   }, []);
 
   return loading && profile === null ? (
-    <Spinner />
+    <div className="spinner-container">
+      <Spinner />
+    </div>
   ) : (
     <>
       <h1 className="large text-primary">Dashboard</h1>
