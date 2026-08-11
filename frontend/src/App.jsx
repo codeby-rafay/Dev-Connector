@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import { useEffect } from "react";
 import Navbar from "./components/layout/Navbar";
 import Landing from "./components/layout/Landing";
@@ -22,16 +27,72 @@ if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
 
-const App = () => {
-  useEffect(() => {
-    store.dispatch(loadUser());
-  }, []);
+const AppRoutes = () => {
+  const location = useLocation();
+  const isLanding = location.pathname === "/";
 
   return (
-    <Provider store={store}>
-      <Router>
-        <Navbar />
+    <>
+      <Navbar />
 
+      {isLanding ? (
+        <>
+          <Alert />
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute>
+                  <Profile />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <PrivateRoute>
+                  <Dashboard />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/create-profile"
+              element={
+                <PrivateRoute>
+                  <CreateProfile />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/edit-profile"
+              element={
+                <PrivateRoute>
+                  <EditProfile />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/add-experience"
+              element={
+                <PrivateRoute>
+                  <AddExperience />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/add-education"
+              element={
+                <PrivateRoute>
+                  <AddEducation />
+                </PrivateRoute>
+              }
+            />
+          </Routes>
+        </>
+      ) : (
         <section className="container">
           <Alert />
 
@@ -39,8 +100,22 @@ const App = () => {
             <Route path="/" element={<Landing />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute>
+                  <Profile />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <PrivateRoute>
+                  <Dashboard />
+                </PrivateRoute>
+              }
+            />
             <Route
               path="/create-profile"
               element={
@@ -75,6 +150,20 @@ const App = () => {
             />
           </Routes>
         </section>
+      )}
+    </>
+  );
+};
+
+const App = () => {
+  useEffect(() => {
+    store.dispatch(loadUser());
+  }, []);
+
+  return (
+    <Provider store={store}>
+      <Router>
+        <AppRoutes />
       </Router>
     </Provider>
   );
