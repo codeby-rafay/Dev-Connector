@@ -1,6 +1,13 @@
 import axios from "axios";
 import { setAlert } from "./alert.action";
-import { GET_PROFILE, PROFILE_ERROR, UPDATE_PROFILE } from "./types";
+import {
+  GET_PROFILE,
+  PROFILE_ERROR,
+  UPDATE_PROFILE,
+  GET_PROFILES,
+  CLEAR_PROFILE,
+  GET_REPOS,
+} from "./types";
 
 // Get current users profile
 export const getCurrentProfile = () => async (dispatch) => {
@@ -19,6 +26,73 @@ export const getCurrentProfile = () => async (dispatch) => {
       payload: {
         msg: response?.statusText || err.message,
         status: response?.status || 500,
+      },
+    });
+  }
+};
+
+// Get all profiles
+export const getProfiles = () => async (dispatch) => {
+  dispatch({ type: CLEAR_PROFILE });
+  try {
+    const res = await axios.get("http://localhost:5000/api/profile");
+
+    dispatch({
+      type: GET_PROFILES,
+      payload: res.data.profiles,
+    });
+  } catch (err) {
+    const response = err.response;
+
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: {
+        msg: response?.statusText || err.message,
+        status: response?.status || 500,
+      },
+    });
+  }
+};
+
+// Get profile by ID
+export const getProfileById = (userId) => async (dispatch) => {
+  try {
+    const res = await axios.get(
+      `http://localhost:5000/api/profile/user/${userId}`,
+    );
+
+    dispatch({
+      type: GET_PROFILE,
+      payload: res.data.profile,
+    });
+  } catch (err) {
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: {
+        msg: err.response.statusText || err.message,
+        status: err.response.status || 500,
+      },
+    });
+  }
+};
+
+// Get GitHub repos
+export const getGithubRepos = (username) => async (dispatch) => {
+  try {
+    const res = await axios.get(
+      `http://localhost:5000/api/profile/github/${username}`,
+    );
+
+    dispatch({
+      type: GET_REPOS,
+      payload: res.data.repos,
+    });
+  } catch (err) {
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: {
+        msg: err.response.statusText || err.message,
+        status: err.response.status || 500,
       },
     });
   }
