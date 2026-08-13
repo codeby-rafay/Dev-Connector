@@ -30,26 +30,33 @@ function EditProfile({
 
   useEffect(() => {
     getCurrentProfile();
-  }, []);
+  }, [getCurrentProfile]);
 
   useEffect(() => {
-    if (profile?.profile) {
-      const p = profile.profile;
+    if (profile) {
+      const hasSocialLinks =
+        profile.social?.twitter ||
+        profile.social?.facebook ||
+        profile.social?.youtube ||
+        profile.social?.linkedin ||
+        profile.social?.instagram;
 
       setFormData({
-        company: p.company || "",
-        website: p.website || "",
-        location: p.location || "",
-        status: p.status || "",
-        skills: p.skills ? p.skills.join(",") : "",
-        githubusername: p.githubusername || "",
-        bio: p.bio || "",
-        twitter: p.social?.twitter || "",
-        facebook: p.social?.facebook || "",
-        linkedin: p.social?.linkedin || "",
-        youtube: p.social?.youtube || "",
-        instagram: p.social?.instagram || "",
+        company: profile.company || "",
+        website: profile.website || "",
+        location: profile.location || "",
+        status: profile.status || "",
+        skills: profile.skills ? profile.skills.join(",") : "",
+        githubusername: profile.githubusername || "",
+        bio: profile.bio || "",
+        twitter: profile.social?.twitter || "",
+        facebook: profile.social?.facebook || "",
+        linkedin: profile.social?.linkedin || "",
+        youtube: profile.social?.youtube || "",
+        instagram: profile.social?.instagram || "",
       });
+
+      toggleSocialInputs(Boolean(hasSocialLinks));
     }
   }, [profile]);
 
@@ -78,7 +85,7 @@ function EditProfile({
 
   return (
     <>
-      <h1 className="large text-primary">Create Your Profile</h1>
+      <h1 className="large text-primary">Edit Your Profile</h1>
       <p className="lead">
         <i className="fas fa-user"></i> Let's get some information to make your
         profile stand out

@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { getProfiles } from "../../actions/profile.action";
 import ProfileItem from "./ProfileItem";
 
-const Profile = ({ getProfiles, profile: { profiles, loading } }) => {
+const Profiles = ({ getProfiles, profile: { profiles, loading } }) => {
   useEffect(() => {
     getProfiles();
   }, [getProfiles]);
@@ -38,7 +38,7 @@ const Profile = ({ getProfiles, profile: { profiles, loading } }) => {
   );
 };
 
-Profile.propTypes = {
+Profiles.propTypes = {
   getProfiles: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
 };
@@ -47,4 +47,4 @@ const mapStateToProps = (state) => ({
   profile: state.profile,
 });
 
-export default connect(mapStateToProps, { getProfiles })(Profile);
+export default connect(mapStateToProps, { getProfiles })(Profiles);
