@@ -63,21 +63,26 @@ router.post(
     // Build profile object
     const profileFields = {};
     profileFields.user = req.user.id;
-    if (company) profileFields.company = company;
-    if (website) profileFields.website = website;
-    if (location) profileFields.location = location;
-    if (bio) profileFields.bio = bio;
-    if (status) profileFields.status = status;
-    if (githubusername) profileFields.githubusername = githubusername;
-    if (skills) {
-      profileFields.skills = skills.split(",").map((skill) => skill.trim());
+
+    if (company !== undefined) profileFields.company = company;
+    if (website !== undefined) profileFields.website = website;
+    if (location !== undefined) profileFields.location = location;
+    if (bio !== undefined) profileFields.bio = bio;
+    if (status !== undefined) profileFields.status = status;
+    if (githubusername !== undefined) profileFields.githubusername = githubusername;
+    if (skills !== undefined) {
+      profileFields.skills = skills
+        ? skills.split(",").map((skill) => skill.trim())
+        : [];
     }
-    profileFields.social = {};
-    if (youtube) profileFields.social.youtube = youtube;
-    if (twitter) profileFields.social.twitter = twitter;
-    if (facebook) profileFields.social.facebook = facebook;
-    if (linkedin) profileFields.social.linkedin = linkedin;
-    if (instagram) profileFields.social.instagram = instagram;
+
+    profileFields.social = {
+      youtube: youtube || "",
+      twitter: twitter || "",
+      facebook: facebook || "",
+      linkedin: linkedin || "",
+      instagram: instagram || "",
+    };
 
     try {
       let profile = await profileModel.findOne({ user: req.user.id });
@@ -323,8 +328,7 @@ router.delete("/education/:edu_id", authMiddleware, async (req, res) => {
 router.get("/github/:username", async (req, res) => {
   try {
     const options = {
-      uri: `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc&
-      client_id=${process.env.GITHUB_CLIENT_ID}&client_secret=${process.env.GITHUB_CLIENT_SECRET}`,
+      uri: `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc&client_id=${process.env.GITHUB_CLIENT_ID}&client_secret=${process.env.GITHUB_CLIENT_SECRET}`,
       method: "GET",
       headers: { "user-agent": "node.js" },
     };

@@ -23,6 +23,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         profile: payload,
+        repos: [],
         loading: false,
       };
     case GET_PROFILES:

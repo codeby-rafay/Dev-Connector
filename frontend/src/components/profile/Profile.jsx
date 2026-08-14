@@ -8,6 +8,7 @@ import ProfileTop from "./ProfileTop";
 import ProfileAbout from "./ProfileAbout";
 import ProfileExperience from "./ProfileExperience";
 import ProfileEducation from "./ProfileEducation";
+import ProfileGithub from "./ProfileGithub";
 
 const Profile = ({ getProfileById, profile: { profile, loading }, auth }) => {
   const { id } = useParams();
@@ -37,7 +38,7 @@ const Profile = ({ getProfileById, profile: { profile, loading }, auth }) => {
             <ProfileTop profile={profile} />
             <ProfileAbout profile={profile} />
             <div className="profile-exp bg-white p-2">
-              <h2 class="text-primary">Experience</h2>
+              <h2 className="text-primary">Experience</h2>
               {profile.experience.length > 0 ? (
                 <>
                   {profile.experience.map((experience) => (
@@ -52,7 +53,7 @@ const Profile = ({ getProfileById, profile: { profile, loading }, auth }) => {
               )}
             </div>
             <div className="profile-edu bg-white p-2">
-              <h2 class="text-primary">Education</h2>
+              <h2 className="text-primary">Education</h2>
               {profile.education.length > 0 ? (
                 <>
                   {profile.education.map((education) => (
@@ -66,6 +67,7 @@ const Profile = ({ getProfileById, profile: { profile, loading }, auth }) => {
                 <h4>No education credentials</h4>
               )}
             </div>
+            <ProfileGithub username={profile.githubusername || ""} />
           </div>
         </>
       )}

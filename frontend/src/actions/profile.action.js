@@ -12,7 +12,7 @@ import {
 // Get current users profile
 export const getCurrentProfile = () => async (dispatch) => {
   try {
-    const res = await axios.get("http://localhost:5000/api/profile/me");
+    const res = await axios.get("http://localhost:3000/api/profile/me");
 
     dispatch({
       type: GET_PROFILE,
@@ -34,7 +34,7 @@ export const getCurrentProfile = () => async (dispatch) => {
 // Get all profiles
 export const getProfiles = () => async (dispatch) => {
   try {
-    const res = await axios.get("http://localhost:5000/api/profile");
+    const res = await axios.get("http://localhost:3000/api/profile");
 
     dispatch({
       type: GET_PROFILES,
@@ -57,7 +57,7 @@ export const getProfiles = () => async (dispatch) => {
 export const getProfileById = (userId) => async (dispatch) => {
   try {
     const res = await axios.get(
-      `http://localhost:5000/api/profile/user/${userId}`,
+      `http://localhost:3000/api/profile/user/${userId}`,
     );
 
     dispatch({
@@ -79,19 +79,23 @@ export const getProfileById = (userId) => async (dispatch) => {
 export const getGithubRepos = (username) => async (dispatch) => {
   try {
     const res = await axios.get(
-      `http://localhost:5000/api/profile/github/${username}`,
+      `http://localhost:3000/api/profile/github/${username}`,
     );
 
     dispatch({
       type: GET_REPOS,
-      payload: res.data.repos,
+      payload: Array.isArray(res.data) ? res.data : [],
     });
   } catch (err) {
     dispatch({
+      type: GET_REPOS,
+      payload: [],
+    });
+    dispatch({
       type: PROFILE_ERROR,
       payload: {
-        msg: err.response.statusText || err.message,
-        status: err.response.status || 500,
+        msg: err.response?.statusText || err.message,
+        status: err.response?.status || 500,
       },
     });
   }
@@ -108,7 +112,7 @@ export const createProfile =
         },
       };
       const res = await axios.post(
-        "http://localhost:5000/api/profile",
+        "http://localhost:3000/api/profile",
         formData,
         config,
       );
@@ -152,7 +156,7 @@ export const addExperience = (formData, navigate) => async (dispatch) => {
       },
     };
     const res = await axios.put(
-      "http://localhost:5000/api/profile/experience",
+      "http://localhost:3000/api/profile/experience",
       formData,
       config,
     );
@@ -192,7 +196,7 @@ export const addEducation = (formData, navigate) => async (dispatch) => {
       },
     };
     const res = await axios.put(
-      "http://localhost:5000/api/profile/education",
+      "http://localhost:3000/api/profile/education",
       formData,
       config,
     );
@@ -227,7 +231,7 @@ export const addEducation = (formData, navigate) => async (dispatch) => {
 export const deleteExperience = (id) => async (dispatch) => {
   try {
     const res = await axios.delete(
-      `http://localhost:5000/api/profile/experience/${id}`,
+      `http://localhost:3000/api/profile/experience/${id}`,
     );
     dispatch({
       type: UPDATE_PROFILE,
@@ -249,7 +253,7 @@ export const deleteExperience = (id) => async (dispatch) => {
 export const deleteEducation = (id) => async (dispatch) => {
   try {
     const res = await axios.delete(
-      `http://localhost:5000/api/profile/education/${id}`,
+      `http://localhost:3000/api/profile/education/${id}`,
     );
     dispatch({
       type: UPDATE_PROFILE,
@@ -271,7 +275,7 @@ export const deleteEducation = (id) => async (dispatch) => {
 export const deleteAccount = () => async (dispatch) => {
   if (window.confirm("Are you sure? This can NOT be undone!")) {
     try {
-      await axios.delete("http://localhost:5000/api/profile");
+      await axios.delete("http://localhost:3000/api/profile");
       dispatch({ type: CLEAR_PROFILE });
       dispatch({ type: ACCOUNT_DELETED });
 

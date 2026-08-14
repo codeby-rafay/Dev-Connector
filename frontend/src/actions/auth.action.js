@@ -14,17 +14,26 @@ import setAuthToken from "../utils/setAuthtoken";
 
 // Load User
 export const loadUser = () => async (dispatch) => {
-  if (localStorage.token) {
-    setAuthToken(localStorage.token);
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    dispatch({ type: AUTH_ERROR });
+    return;
   }
 
+  setAuthToken(token);
+
   try {
-    const res = await axios.get("http://localhost:5000/api/auth");
+    const res = await axios.get("http://localhost:3000/api/auth");
     dispatch({
       type: USER_LOADED,
       payload: res.data,
     });
   } catch (err) {
+    if (err.response?.status === 401) {
+      localStorage.removeItem("token");
+      setAuthToken(null);
+    }
     dispatch({
       type: AUTH_ERROR,
     });
@@ -45,11 +54,12 @@ export const register =
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/users",
+        "http://localhost:3000/api/users",
         body,
         config,
       );
 
+      setAuthToken(res.data.token);
       dispatch({
         type: REGISTER_SUCCESS,
         payload: res.data,
@@ -57,10 +67,17 @@ export const register =
 
       dispatch(loadUser());
     } catch (err) {
-      const errors = err.response.data.errors;
+      const errors = err.response?.data?.errors;
 
       if (errors) {
         errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
+      } else if (!err.response) {
+        dispatch(
+          setAlert(
+            "Server is not available",
+            "danger",
+          ),
+        );
       }
 
       dispatch({
@@ -81,10 +98,12 @@ export const login = (email, password) => async (dispatch) => {
 
   try {
     const res = await axios.post(
-      "http://localhost:5000/api/auth",
+      "http://localhost:3000/api/auth",
       body,
       config,
     );
+
+    setAuthToken(res.data.token);
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data,
@@ -92,10 +111,14 @@ export const login = (email, password) => async (dispatch) => {
 
     dispatch(loadUser());
   } catch (err) {
-    const errors = err.response.data.errors;
+    const errors = err.response?.data?.errors;
 
     if (errors) {
       errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
+    } else if (!err.response) {
+      dispatch(
+        setAlert("Server is not available", "danger"),
+      );
     }
 
     dispatch({
@@ -106,6 +129,7 @@ export const login = (email, password) => async (dispatch) => {
 
 // Logout / Clear Profile
 export const logout = () => (dispatch) => {
+  setAuthToken(null);
   dispatch({ type: CLEAR_PROFILE });
   dispatch({ type: LOGOUT });
 };
