@@ -19,6 +19,7 @@ import AddExperience from "./components/profile-forms/AddExperience";
 import AddEducation from "./components/profile-forms/AddEducation";
 import Profiles from "./components/profiles/Profiles";
 import Profile from "./components/profile/Profile";
+import Posts from "./components/posts/Posts";
 
 import store from "./store";
 import { Provider } from "react-redux";
@@ -99,6 +100,14 @@ const AppRoutes = () => {
                 </PrivateRoute>
               }
             />
+            <Route
+              path="/posts"
+              element={
+                <PrivateRoute>
+                  <Posts />
+                </PrivateRoute>
+              }
+            />
           </Routes>
         </>
       ) : (
@@ -162,6 +171,14 @@ const AppRoutes = () => {
               element={
                 <PrivateRoute>
                   <AddEducation />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/posts"
+              element={
+                <PrivateRoute>
+                  <Posts />
                 </PrivateRoute>
               }
             />
