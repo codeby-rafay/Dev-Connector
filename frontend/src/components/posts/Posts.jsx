@@ -22,9 +22,11 @@ const Posts = ({ getPosts, post: { posts, loading } }) => {
       </p>
       {/* Post form */}
       <div className="posts">
-        {posts.map((post) => (
-          <PostItem key={post._id} post={post} />
-        ))}
+        {posts.length === 0 ? (
+          <p>No posts yet.</p>
+        ) : (
+          posts.map((post) => <PostItem key={post._id} post={post} />)
+        )}
       </div>
     </>
   );
