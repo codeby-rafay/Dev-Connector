@@ -7,6 +7,7 @@ import Spinner from "../layout/Spinner";
 import PostItem from "../posts/PostItem";
 import CommentForm from "./CommentForm";
 import CommentItem from "./CommentItem";
+import NotFound from "../layout/NotFound";
 
 const Post = ({ getPost, post: { post, loading } }) => {
   const { id } = useParams();
@@ -16,11 +17,19 @@ const Post = ({ getPost, post: { post, loading } }) => {
     getPost(id);
   }, [getPost, id]);
 
-  return loading || post === null ? (
-    <div className="spinner-container">
-      <Spinner />
-    </div>
-  ) : (
+  if (loading) {
+    return (
+      <div className="spinner-container">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (!post) {
+    return <NotFound />;
+  }
+
+  return (
     <>
       <Link to="/posts" className="btn">
         Back To Posts
