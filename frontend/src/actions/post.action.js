@@ -31,8 +31,8 @@ export const getPosts = () => async (dispatch) => {
   }
 };
 
-// Add like
-export const addLike = (id) => async (dispatch, getState) => {
+// Toggle like
+export const toggleLike = (id) => async (dispatch, getState) => {
   const state = getState();
   const post = state.post.posts.find((item) => item._id === id);
   const currentLikes = Array.isArray(post?.likes) ? [...post.likes] : [];
@@ -42,52 +42,11 @@ export const addLike = (id) => async (dispatch, getState) => {
     (like) => like.user === userId || like.user?._id === userId,
   );
 
-  if (userId && !hasLiked) {
-    dispatch({
-      type: UPDATE_LIKES,
-      payload: { id, likes: [{ user: userId }, ...currentLikes] },
-    });
-  }
-
-  try {
-    const res = await axios.put(`/api/posts/like/${id}`);
-
-    dispatch({
-      type: UPDATE_LIKES,
-      payload: {
-        id,
-        likes: Array.isArray(res.data?.post) ? res.data.post : [],
-      },
-    });
-  } catch (err) {
-    // Roll back optimistic update if request fails.
-    dispatch({
-      type: UPDATE_LIKES,
-      payload: { id, likes: currentLikes },
-    });
-
-    dispatch({
-      type: POST_ERROR,
-      payload: {
-        msg: err.response?.statusText || err.message,
-        status: err.response?.status || 500,
-      },
-    });
-  }
-};
-
-// Remove like
-export const removeLike = (id) => async (dispatch, getState) => {
-  const state = getState();
-  const post = state.post.posts.find((item) => item._id === id);
-  const currentLikes = Array.isArray(post?.likes) ? [...post.likes] : [];
-  const userId = state.auth.user?._id;
-
-  const optimisticLikes = userId
+  const optimisticLikes = hasLiked
     ? currentLikes.filter(
         (like) => like.user !== userId && like.user?._id !== userId,
       )
-    : currentLikes;
+    : [{ user: userId }, ...currentLikes];
 
   if (userId) {
     dispatch({
@@ -97,7 +56,7 @@ export const removeLike = (id) => async (dispatch, getState) => {
   }
 
   try {
-    const res = await axios.put(`/api/posts/unlike/${id}`);
+    const res = await axios.put(`/api/posts/like/${id}`);
 
     dispatch({
       type: UPDATE_LIKES,
