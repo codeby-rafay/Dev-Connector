@@ -5,10 +5,28 @@ import { connect } from "react-redux";
 import { getProfiles } from "../../actions/profile.action";
 import ProfileItem from "./ProfileItem";
 
-const Profiles = ({ getProfiles, profile: { profiles, loading } }) => {
+const Profiles = ({
+  getProfiles,
+  profile: { profiles, loading },
+  auth: { user },
+}) => {
   useEffect(() => {
     getProfiles();
   }, [getProfiles]);
+
+  const orderedProfiles = [...profiles].sort((firstProfile, secondProfile) => {
+    const currentUserId = String(user?._id || user?.id || "");
+    const firstUserId = String(
+      firstProfile.user?._id || firstProfile.user || "",
+    );
+    const secondUserId = String(
+      secondProfile.user?._id || secondProfile.user || "",
+    );
+    const firstIsCurrentUser = firstUserId === currentUserId;
+    const secondIsCurrentUser = secondUserId === currentUserId;
+
+    return Number(secondIsCurrentUser) - Number(firstIsCurrentUser);
+  });
 
   return (
     <>
@@ -24,8 +42,8 @@ const Profiles = ({ getProfiles, profile: { profiles, loading } }) => {
             developers
           </p>
           <div className="profiles">
-            {profiles.length > 0 ? (
-              profiles.map((profile) => (
+            {orderedProfiles.length > 0 ? (
+              orderedProfiles.map((profile) => (
                 <ProfileItem key={profile._id} profile={profile} />
               ))
             ) : (
@@ -41,10 +59,12 @@ const Profiles = ({ getProfiles, profile: { profiles, loading } }) => {
 Profiles.propTypes = {
   getProfiles: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   profile: state.profile,
+  auth: state.auth,
 });
 
 export default connect(mapStateToProps, { getProfiles })(Profiles);
