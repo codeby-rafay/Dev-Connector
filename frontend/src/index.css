@@ -331,6 +331,15 @@ button {
 
 .navbar ul {
     display: flex;
+    align-items: center;
+}
+
+.navbar-menu {
+    margin-left: auto;
+}
+
+.navbar-toggle {
+    display: none;
 }
 
 .navbar a {
@@ -345,6 +354,57 @@ button {
 
 .navbar .welcome span {
     margin-right: 0.6rem;
+}
+
+.user-menu {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-left: 0.5rem;
+}
+
+.user-menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.3rem;
+    height: 2.3rem;
+    border: 2px solid var(--primary-color);
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.user-menu-toggle:hover {
+    background: #fff;
+    color: var(--primary-color);
+}
+
+.user-dropdown {
+    position: absolute;
+    top: calc(100% + 0.6rem);
+    right: 0;
+    min-width: 9rem;
+    padding: 0.35rem 0;
+    background: #fff;
+    border: 1px solid var(--light-color);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.navbar .user-dropdown a {
+    display: block;
+    margin: 0;
+    padding: 0.55rem 0.8rem;
+    color: var(--dark-color);
+    white-space: nowrap;
+}
+
+.navbar .user-dropdown a:hover {
+    background: var(--light-color);
+    color: var(--primary-color);
 }
 
 /* Landing Page */
@@ -544,21 +604,72 @@ button {
 
     /* Navbar */
     .navbar {
-        display: block;
-        text-align: center;
-    }
-
-    .navbar ul {
-        text-align: center;
-        justify-content: center;
+        flex-wrap: wrap;
+        padding: 0.7rem 1rem;
     }
 
     .navbar h1 {
-        margin-bottom: 1rem;
+        margin-bottom: 0;
     }
 
-    .navbar .welcome {
+    .navbar-toggle {
+        display: block;
+        margin-left: auto;
+        padding: 0.4rem 0.6rem;
+        border: 1px solid var(--primary-color);
+        border-radius: 4px;
+        background: transparent;
+        color: #fff;
+        font-size: 1.4rem;
+        cursor: pointer;
+    }
+
+    .navbar-menu {
         display: none;
+        flex-basis: 100%;
+    }
+
+    .navbar-menu.is-open {
+        display: block;
+        width: 100%;
+        margin-top: 0.75rem;
+        padding: 0.5rem 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .navbar-menu ul {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.2rem;
+        text-align: left;
+    }
+
+    .navbar-menu li {
+        width: 100%;
+    }
+
+    .navbar-menu a {
+        display: block;
+        width: 100%;
+        margin: 0;
+        padding: 0.65rem 0.75rem;
+        border-radius: 4px;
+    }
+
+    .navbar-menu a:hover {
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .navbar-menu .user-menu {
+        justify-content: flex-start;
+        margin-right: 0;
+        margin-left: 0;
+        padding: 0.4rem 0.75rem 0;
+    }
+
+    .navbar-menu .user-dropdown {
+        position: static;
+        margin: 0.25rem 0 0 0.75rem;
     }
 
     /* Profiles Page */
